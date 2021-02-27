@@ -2,7 +2,6 @@ package pdf
 
 import (
 	"github.com/labstack/echo/v4"
-	"log"
 	"net/http"
 	"net/url"
 	"pdf-backend/context"
@@ -19,7 +18,6 @@ func SetupPDFDownloadHandler(e *echo.Echo, ctx context.IContext) {
 		service := NewUploadService(ctx, store)
 
 		downloadURL, err := service.PDFDownload(url.QueryEscape(params["id"].(string)))
-		log.Println(downloadURL)
 		if err != nil {
 			return context.JSON(http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
 		}

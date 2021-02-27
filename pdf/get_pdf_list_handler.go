@@ -3,7 +3,6 @@ package pdf
 import (
 	"github.com/labstack/echo/v4"
 	"go.mongodb.org/mongo-driver/bson"
-	"log"
 	"net/http"
 	"pdf-backend/context"
 	"pdf-backend/middleware"
@@ -28,7 +27,6 @@ func SetupPDFGetListHandler(e *echo.Echo, ctx context.IContext) {
 		filter = ctx.BindTime(filter, params, "expire_at_start")
 		filter = ctx.BindTime(filter, params, "expire_at_end")
 
-		log.Println(filter)
 		results, err := service.GetAllPDF(filter)
 		if err != nil {
 			return context.JSON(http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))

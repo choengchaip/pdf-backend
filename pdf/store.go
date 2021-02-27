@@ -9,9 +9,9 @@ import (
 
 type IUploadStore interface {
 	PDFUpload(fileName string, approverID string, fileAlias string, fileSrc string, expireAt time.Time) (bson.M, error)
-	PDFDelete(fileName string) error
-	PDFUpdate(fileName string, params bson.M) error
-	FindPDF(fileName string) (bson.M, error)
+	PDFDelete(fileAlias string) error
+	PDFUpdate(fileAlias string, params bson.M) error
+	FindPDF(fileAlias string) (bson.M, error)
 	GetAllPDF(filter bson.M) ([]bson.M, error)
 }
 
@@ -57,10 +57,10 @@ func (s *UploadStore) PDFUpload(fileName string, approverID string, fileAlias st
 	}, nil
 }
 
-func (s *UploadStore) PDFDelete(fileName string) error {
+func (s *UploadStore) PDFDelete(fileAlias string) error {
 	m := s.ctx.MongoDB(s.ctx.Config().MongoConfig())
 	_, err := m.UpdateOne("files", bson.M{
-		"file_name": fileName,
+		"file_name": fileAlias,
 	}, bson.M{
 		"$set": bson.M{
 			"is_active":  true,
@@ -74,10 +74,10 @@ func (s *UploadStore) PDFDelete(fileName string) error {
 	return nil
 }
 
-func (s *UploadStore) PDFUpdate(fileName string, params bson.M) error {
+func (s *UploadStore) PDFUpdate(fileAlias string, params bson.M) error {
 	m := s.ctx.MongoDB(s.ctx.Config().MongoConfig())
 	_, err := m.UpdateOne("files", bson.M{
-		"file_alias": fileName,
+		"file_alias": fileAlias,
 	}, bson.M{
 		"$set": params,
 	})

@@ -11,11 +11,6 @@ import (
 
 func SetupGetActivityLogsHandler(e *echo.Echo, ctx context.IContext) {
 	e.GET("/activity-logs", func(context echo.Context) error {
-		params := map[string]interface{}{}
-		if err := context.Bind(&params); err != nil {
-			return err
-		}
-
 		userStore := users.NewUserStore(ctx)
 		userService := users.NewUserService(ctx, userStore)
 

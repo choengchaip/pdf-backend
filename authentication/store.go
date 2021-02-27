@@ -9,7 +9,7 @@ import (
 )
 
 type ILoginStore interface {
-	Login(username string, password string) (bson.M, error)
+	Login(params ILoginModel) (bson.M, error)
 	AssignToken(userId string, token string, expireAt time.Time) (bson.M, error)
 }
 
@@ -23,10 +23,10 @@ func NewLoginStore(ctx context.IContext) ILoginStore {
 	}
 }
 
-func (s *LoginStore) Login(username string, password string) (bson.M, error) {
+func (s *LoginStore) Login(params ILoginModel) (bson.M, error) {
 	m := s.ctx.MongoDB(s.ctx.Config().MongoConfig())
 	user, err := m.FindOne("authentication", bson.M{
-		"username": username,
+		"username": params.Username,
 	})
 	if err != nil {
 		return nil, err
@@ -38,7 +38,7 @@ func (s *LoginStore) Login(username string, password string) (bson.M, error) {
 		return nil, nil
 	}
 
-	if !utils.CheckPasswordHas(password, user["password"].(string)) {
+	if !utils.CheckPasswordHas(params.Password, user["password"].(string)) {
 		log.Println("AdminOrEmailWrong")
 		return nil, nil
 	}

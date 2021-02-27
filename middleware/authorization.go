@@ -11,7 +11,6 @@ func Authorization(ctx context.IContext) func(next echo.HandlerFunc) echo.Handle
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(context echo.Context) error {
 			params := context.Request().Header
-
 			if params["Authorization"] == nil {
 				return context.JSON(http.StatusUnauthorized, bson.M{
 					"message": "Token is invalid",
@@ -23,8 +22,8 @@ func Authorization(ctx context.IContext) func(next echo.HandlerFunc) echo.Handle
 				"token": params["Authorization"][0],
 			})
 			if err != nil {
-				return context.JSON(http.StatusInternalServerError, bson.M{
-					"message": http.StatusText(http.StatusInternalServerError),
+				return context.JSON(http.StatusUnauthorized, bson.M{
+					"message": http.StatusText(http.StatusUnauthorized),
 				})
 			}
 			if result == nil {

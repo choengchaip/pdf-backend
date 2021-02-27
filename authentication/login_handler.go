@@ -8,7 +8,7 @@ import (
 
 func SetupLoginHandler(e *echo.Echo, ctx context.IContext) {
 	e.POST("/login", func(context echo.Context) error {
-		params := map[string]interface{}{}
+		params := ILoginModel{}
 		if err := context.Bind(&params); err != nil {
 			return err
 		}
@@ -16,7 +16,7 @@ func SetupLoginHandler(e *echo.Echo, ctx context.IContext) {
 		store := NewLoginStore(ctx)
 		service := NewLoginService(ctx, store)
 
-		result, err := service.Login(params["username"].(string), params["password"].(string))
+		result, err := service.Login(params)
 		if err != nil {
 			return context.JSON(http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
 		}

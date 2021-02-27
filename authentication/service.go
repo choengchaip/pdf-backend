@@ -7,7 +7,7 @@ import (
 )
 
 type ILoginService interface {
-	Login(username string, password string) (bson.M, error)
+	Login(params ILoginModel) (bson.M, error)
 	AssignToken(userId string, token string, expireAt time.Time) (bson.M, error)
 }
 
@@ -23,8 +23,8 @@ func NewLoginService(ctx context.IContext, store ILoginStore) ILoginService {
 	}
 }
 
-func (s *LoginService) Login(username string, password string) (bson.M, error) {
-	result, err := s.store.Login(username, password)
+func (s *LoginService) Login(params ILoginModel) (bson.M, error) {
+	result, err := s.store.Login(params)
 	if err != nil {
 		return nil, err
 	}
